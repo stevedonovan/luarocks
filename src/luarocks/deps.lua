@@ -543,12 +543,10 @@ function check_external_deps(rockspec, mode)
                   failed_file = nil
                   for _, f in pairs(files) do
                      -- small convenience hack
-                     print('f',f)
                      if f:match("%.so$") or f:match("%.dylib$") or f:match("%.dll$") then
                         f = f:gsub("%.[^.]+$", "."..cfg.external_lib_extension)
                      end
                      local testfile = dir.path(dirdata.dir, f)
-                     print('testfile',testfile)
                      if fs.exists(testfile) then
                         local subdir = dir.dir_name(f)
                         if subdir then
@@ -572,7 +570,6 @@ function check_external_deps(rockspec, mode)
             end
             if ok then
                for dirname, dirdata in pairs(dirs) do
-                  print(name..'_'..dirname, dirdata.dir)
                   vars[name.."_"..dirname] = dirdata.dir
                end
                vars[name.."_DIR"] = prefix
