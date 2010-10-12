@@ -69,7 +69,10 @@ rockspec_types = {
    hooks = {
       platforms = {},
       post_install = "string"
-   }
+   },
+   meta = {
+      MORE = true
+    }
 }
 
 rockspec_types.build.platforms.ANY = rockspec_types.build
