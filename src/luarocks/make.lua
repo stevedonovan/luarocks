@@ -37,6 +37,14 @@ function run(...)
                   " \n-- you may want to run as a privileged user or use your local tree with --local."
    end
    
+   if flags["path"] then 
+      local path = flags["path"]
+      if not fs.is_dir(path) then
+         return nil, "unable to change directory to "..path
+      end
+      fs.change_dir(path)
+   end
+   
    if not rockspec then
       local files = fs.list_dir(fs.current_dir())
       for _, file in pairs(files) do
@@ -56,5 +64,9 @@ function run(...)
       return nil, "Invalid argument: 'make' takes a rockspec as a parameter. See help."
    end
 
-   return build.build_rockspec(rockspec, false, true)
+   local res,err = build.build_rockspec(rockspec, false, true)
+   if flags['path'] then
+      fs.pop_dir()
+   end
+   return res,err
 end
