@@ -38,3 +38,15 @@ t = {
  }
 util.variable_substitutions(t,rockspec.variables)
 dump('variable subst',t)
+
+t = {
+    bonzo = 'dog',
+    platforms={
+        unix = { bonzo = 'cat' }
+    }
+}
+
+util.platform_overrides(t)
+
+print(t.bonzo, t.bonzo == 'cat')
+

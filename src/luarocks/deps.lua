@@ -17,6 +17,7 @@ local cfg = require("luarocks.cfg")
 local manif_core = require("luarocks.manif_core")
 local path = require("luarocks.path")
 local dir = require("luarocks.dir")
+local util = require("luarocks.util")
 
 local operators = {
    ["=="] = "==",
@@ -529,15 +530,14 @@ function check_external_deps(rockspec, mode)
                local file = files[dirdata.testfile]
                if file then
                   local files = {}
-                  file = util.split_string(file,',')
-                  for _,file in ipairs(file) do
-                  if not file:match("%.") then
-                     for _, pattern in ipairs(dirdata.pattern) do
-                        table.insert(files, (pattern:gsub("?", file)))
-                     end
-                  else
-                     table.insert(files, file)
-                  end
+                  for _,file in ipairs(util.split_string(file,';')) do
+                      if not file:match("%.") then
+                         for _, pattern in ipairs(dirdata.pattern) do
+                            table.insert(files, (pattern:gsub("?", file)))
+                         end
+                      else
+                         table.insert(files, file)
+                      end
                   end
                   local found = false
                   failed_file = nil

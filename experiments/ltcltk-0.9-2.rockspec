@@ -1,5 +1,5 @@
 package = "ltcltk"
-version = "0.9-1"
+version = "0.9-2"
 source = {
 	url = "http://www.tset.de/downloads/ltcltk-0.9-1.tar.gz"
 }
@@ -21,13 +21,12 @@ supported_platforms = {
 dependencies = {
 	"lua >= 5.1"
 }
--- does not work because at least on ubuntu tcl.h is in /usr/include/tk, whereas
--- everywhere else it seems to be in /usr/include. I found no way to deal with this
--- in a civil manner, so I resort to a hack. Part 2 at the end of the file.
--- Bad thing is, I lose luarocks' dependency check :(
+
+-- a semi-colon separated list of possible locations for tcl.h;
+-- the one that wins ends up setting TCL_INCDIR
 external_dependencies = {
 	TCL = {
-		header = "tcl.h,tk/tcl.h,tcl/tcl.h"
+		header = "tcl.h;tk/tcl.h;tcl/tcl.h",
 	}
 }
 
@@ -38,11 +37,10 @@ build = {
 		ltcl = {
 			sources = { "ltcl.c" },
 			-- change to tcl8.5 or tcl8.4, as needed
-			libraries = { "tcl" }
+			libraries = { "tcl" },
+			incdirs = {"$(TCL_INCDIR)"}
 		},
 	},
 	copy_directories = { 'doc', 'samples' },
-	-- this is part 2 of the abovementioned hack. Not pretty, but at least it works. kinda.
-	platforms={unix={modules={ltcl={incdirs = { "/usr/include/tk", "/usr/include/tcl" }}}}} 
 }
 
