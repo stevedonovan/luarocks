@@ -306,6 +306,20 @@ function print_results(results, show_repo, long)
    end
 end
 
+function print_format_results(results, format_flag)
+   assert(type(results) == "table")
+   assert(type(format_flag) == "string" or format_flag == true)
+   local out = io.stdout
+   local delim = '\t'
+   for package, versions in util.sortedpairs(results) do
+      for version, repos in util.sortedpairs(versions, deps.compare_versions) do
+         for _,repo in ipairs(repos) do
+            out:write(package,delim,version,delim,repo.repo,'\n')
+         end
+      end
+   end
+end
+
 --- Splits a list of search results into two lists, one for "source" results
 -- to be used with the "build" command, and one for "binary" results to be
 -- used with the "install" command.

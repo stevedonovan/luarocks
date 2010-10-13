@@ -11,7 +11,8 @@ local path = require("luarocks.path")
 help_summary = "Lists currently installed rocks."
 
 help = [[
-<argument> is a substring of a rock name to filter by.
+<argument> is a substring of a rock name to filter by, can be empty.
+--line will give the results each on their own line in tab-separated columns.
 ]]
 
 --- Driver function for "list" command.
@@ -26,10 +27,14 @@ function run(...)
    for _, tree in ipairs(cfg.rocks_trees) do
       search.manifest_search(results, path.rocks_dir(tree), query)
    end
-   print()
-   print("Installed rocks:")
-   print("----------------")
-   print()
-   search.print_results(results, false)
+   if not flags['line'] then
+      print()
+      print("Installed rocks:")
+      print("----------------")
+      print()
+      search.print_results(results, false)
+   else
+      search.print_format_results(results,flags['line'])
+   end   
    return true
 end
