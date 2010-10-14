@@ -118,6 +118,11 @@ function build_rockspec(rockspec_file, need_to_fetch, minimal_mode)
    end
 
    local name, version = rockspec.name, rockspec.version
+   local versions = rep.get_versions(name)
+   if versions then
+      table.sort(versions)
+      rockspec.variables.LAST_VERSION = versions[#versions]
+   end
    if rep.is_installed(name, version) then
       rep.delete_version(name, version)
    end
@@ -138,6 +143,10 @@ function build_rockspec(rockspec_file, need_to_fetch, minimal_mode)
       end
       fs.change_dir(rockspec.source.dir)
    end
+   
+   -- we are inside the unpacked archive directory (or already there through make)
+   ok, err = rep.run_hook(rockspec, "pre_install")
+   if err then return nil, err end   
    
    local dirs = {
       lua = path.lua_dir(name, version),

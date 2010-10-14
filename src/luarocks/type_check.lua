@@ -68,7 +68,8 @@ rockspec_types = {
    },
    hooks = {
       platforms = {},
-      post_install = "string"
+      post_install = "string",
+      pre_install = "string"
    },
    meta = {
       MORE = true
